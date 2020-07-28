@@ -1,0 +1,25 @@
+version: '3.3'
+services:
+  postgres:
+    image: postgres:11-alpine
+    hostname: postgres
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./.env
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+      - ./db/initdb:/docker-entrypoint-initdb.d
+  crescent:
+    build:
+      dockerfile: crescent/Dockerfile
+      context: .
+    command: python manage.py runserver 0.0.0.0:8080
+    env_file:
+      - ./.env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    volumes:
+      - ./crescent:/opt/crescent
