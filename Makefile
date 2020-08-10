@@ -10,3 +10,5 @@ bash:
 	docker-compose exec crescent /bin/bash
 shell:
 	docker-compose exec crescent python manage.py shell
+test:
+	docker-compose exec crescent python manage.py test ${app}
