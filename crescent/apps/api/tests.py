@@ -7,6 +7,6 @@ from .modules.general import *
 
 class ModuleTests(TestCase):
     def test_tokenize(self):
-        tokens = tokenize("テストです")
+        tokens = tokenize("テストです", with_category=True)
         self.assertIs(tokens[0][0] == "テスト", True)
         self.assertIs(tokens[0][1] == "名詞", True)
