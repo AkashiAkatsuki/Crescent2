@@ -16,4 +16,8 @@ class MarkovModel(ConversationModelBase):
         pass
 
     def _token2word(self, name, category):
-        pass
+        word, created = Word.objects.get_or_create(
+            name=name,
+            category=category,
+        )
+        return word
