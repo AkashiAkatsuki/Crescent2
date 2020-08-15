@@ -26,3 +26,14 @@ class MarkovTest(TestCase):
     def test_token2word_unknown(self):
         word = self.markov_model._token2word(self.unknown_name, 0)
         self.assertEqual(word, Word.objects.last())
+
+    def test_learn(self):
+        self.markov_model.learn("これは学習のテストです")
+        last_markov = Markov.objects.last()
+        words = [
+            Word.objects.get(id=last_markov.prefix1).name,
+            Word.objects.get(id=last_markov.prefix2).name,
+            Word.objects.get(id=last_markov.suffix).name,
+        ]
+        expected = ["の", "テスト", "です"]
+        self.assertListEqual(words, expected)
