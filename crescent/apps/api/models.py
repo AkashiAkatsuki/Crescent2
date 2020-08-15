@@ -17,3 +17,4 @@ class Markov(models.Model):
     suffix = models.IntegerField()
     class Meta:
         db_table = 'markovs'
+        unique_together = ('prefix1', 'prefix2', 'suffix')
