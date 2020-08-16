@@ -20,6 +20,7 @@ class MarkovModel(ConversationModelBase):
                 prefix2=prefix2.id,
                 suffix=suffix.id,
             )
+        return words
 
     def generate(self, input_text=None, keyword=None):
         pass
