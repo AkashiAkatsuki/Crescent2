@@ -35,5 +35,5 @@ class MarkovTest(TestCase):
             Word.objects.get(id=last_markov.prefix2).name,
             Word.objects.get(id=last_markov.suffix).name,
         ]
-        expected = ["の", "テスト", "です"]
+        expected = ["テスト", "です", "EOS"]
         self.assertListEqual(words, expected)
