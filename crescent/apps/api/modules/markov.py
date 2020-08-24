@@ -1,4 +1,4 @@
-from .general import tokenize
+from apps.api.modules.general import tokenize
 from apps.api.models import Word, Markov
 import random
 
