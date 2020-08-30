@@ -28,15 +28,13 @@ class MarkovTest(TestCase):
         self.assertEqual(word, Word.objects.last())
 
     def test_learn(self):
-        self.markov_model.learn("これは学習のテストです")
+        words = self.markov_model.learn("これは学習のテストです")['words']
+        self.assertEqual(words[0]['name'], "これ")
+
         last_markov = Markov.objects.last()
-        words = [
-            Word.objects.get(id=last_markov.prefix1).name,
-            Word.objects.get(id=last_markov.prefix2).name,
-            Word.objects.get(id=last_markov.suffix).name,
-        ]
-        expected = ["テスト", "です", "EOS"]
-        self.assertListEqual(words, expected)
+        learned = [last_markov.prefix1, last_markov.prefix2, last_markov.suffix]
+        expected = [words[-2]['id'], words[-1]['id'], -1]
+        self.assertListEqual(learned, expected)
 
     def test_generate(self):
         self.markov_model.learn("これは学習のテストです")

@@ -29,12 +29,14 @@ class MarkovModel(ConversationModelBase):
                 prefix2=prefix2.id,
                 suffix=suffix.id,
             )
-        return words[:-1]
+        return {
+            'words': [model_to_dict(w) for w in words[:-1]],
+        }
 
     def generate(self, input_text=None, options=None):
         if input_text:
-            words = self.learn(input_text)
-            keyword_id = random.choice(words).id
+            words = self.learn(input_text)['words']
+            keyword_id = random.choice(words)['id']
         elif options and 'keyword_id' in options:
             keyword_id = options['keyword_id']
         else:
