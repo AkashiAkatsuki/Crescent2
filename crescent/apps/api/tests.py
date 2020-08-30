@@ -40,6 +40,5 @@ class MarkovTest(TestCase):
 
     def test_generate(self):
         self.markov_model.learn("これは学習のテストです")
-        generated = self.markov_model.generate("これ")
-        generated = [word.name for word in generated]
-        self.assertListEqual(generated, ["これ", "は", "学習", "の", "テスト", "です"])
+        output_text, descriptions = self.markov_model.generate("これ")
+        self.assertEqual(output_text, "これは学習のテストです")
