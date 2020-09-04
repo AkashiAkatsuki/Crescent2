@@ -26,3 +26,17 @@ def learn(request):
         'input_text': data['input_text'],
         'descriptions': descriptions,
     })
+
+@require_POST
+@csrf_exempt
+def generate(request):
+    data = json.loads(request.body)
+    markov = MarkovModel()
+    input_text = data['input_text'] if 'input_text' in data else None
+    options = data['options'] if 'options' in data else []
+    output_text, descriptions = markov.generate(input_text, options)
+    return JsonResponseUTF8({
+        'input_text': input_text,
+        'output_text': output_text,
+        'descriptions': descriptions,
+    })
