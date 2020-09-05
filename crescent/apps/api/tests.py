@@ -28,7 +28,8 @@ class MarkovTest(TestCase):
         self.assertEqual(word, Word.objects.last())
 
     def test_learn(self):
-        words = self.markov_model.learn("これは学習のテストです")['words']
+        descriptions = self.markov_model.learn("これは学習のテストです")
+        words = descriptions['input_words']
         self.assertEqual(words[0]['name'], "これ")
 
         last_markov = Markov.objects.last()
@@ -39,4 +40,6 @@ class MarkovTest(TestCase):
     def test_generate(self):
         self.markov_model.learn("これは学習のテストです")
         output_text, descriptions = self.markov_model.generate("これ")
+        words = descriptions['output_words']
         self.assertEqual(output_text, "これは学習のテストです")
+        self.assertEqual(words[0]['name'], "これ")

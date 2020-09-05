@@ -30,14 +30,15 @@ class MarkovModel(ConversationModelBase):
                 suffix=suffix.id,
             )
         return {
-            'words': [model_to_dict(w) for w in words[:-1]],
+            'input_words': [model_to_dict(w) for w in words[:-1]],
         }
 
     def generate(self, input_text=None, options=None):
         if input_text:
-            words = self.learn(input_text)['words']
-            keyword_id = random.choice(words)['id']
+            descriptions = self.learn(input_text)
+            keyword_id = random.choice(descriptions['input_words'])['id']
         elif options and 'keyword_id' in options:
+            descriptions = []
             keyword_id = options['keyword_id']
         else:
             return None, {}
@@ -57,7 +58,7 @@ class MarkovModel(ConversationModelBase):
         found = {w.id: w for w in found}
         ordered = [found[i] for i in sequence]
         output_text = ''.join([w.name for w in ordered])
-        descriptions = {'words': [model_to_dict(w) for w in ordered]}
+        descriptions['output_words'] = [model_to_dict(w) for w in ordered]
         return output_text, descriptions
 
     def _token2word(self, name, category):
