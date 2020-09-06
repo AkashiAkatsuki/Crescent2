@@ -1,9 +1,8 @@
-from apps.api.modules.general import tokenize
-from apps.api.models import Word, Markov
-from django.core import serializers
-from django.forms.models import model_to_dict
-
 import random
+from django.forms.models import model_to_dict
+from apps.api.models import Word, Markov
+from apps.api.modules.general import tokenize
+
 
 class ConversationModelBase:
     def learn(self, input_text):
@@ -11,6 +10,7 @@ class ConversationModelBase:
 
     def generate(self, input_text=None, options=None):
         pass
+
 
 class MarkovModel(ConversationModelBase):
     def __init__(self):
@@ -22,7 +22,7 @@ class MarkovModel(ConversationModelBase):
         words = [self._token2word(name, category) for name, category in tokens]
         words += [eos]
         length = len(words)
-        markov_patterns = [words[i:i+3] for i in range(length-2)]
+        markov_patterns = [words[i : i + 3] for i in range(length - 2)]
         for prefix1, prefix2, suffix in markov_patterns:
             Markov.objects.get_or_create(
                 prefix1=prefix1.id,
@@ -30,16 +30,16 @@ class MarkovModel(ConversationModelBase):
                 suffix=suffix.id,
             )
         return {
-            'input_words': [model_to_dict(w) for w in words[:-1]],
+            "input_words": [model_to_dict(w) for w in words[:-1]],
         }
 
     def generate(self, input_text=None, options=None):
         if input_text:
             descriptions = self.learn(input_text)
-            keyword_id = random.choice(descriptions['input_words'])['id']
-        elif options and 'keyword_id' in options:
+            keyword_id = random.choice(descriptions["input_words"])["id"]
+        elif options and "keyword_id" in options:
             descriptions = []
-            keyword_id = options['keyword_id']
+            keyword_id = options["keyword_id"]
         else:
             return None, {}
         suggested = Markov.objects.filter(prefix1=keyword_id)
@@ -57,12 +57,12 @@ class MarkovModel(ConversationModelBase):
         found = Word.objects.filter(id__in=sequence)
         found = {w.id: w for w in found}
         ordered = [found[i] for i in sequence]
-        output_text = ''.join([w.name for w in ordered])
-        descriptions['output_words'] = [model_to_dict(w) for w in ordered]
+        output_text = "".join([w.name for w in ordered])
+        descriptions["output_words"] = [model_to_dict(w) for w in ordered]
         return output_text, descriptions
 
     def _token2word(self, name, category):
-        word, created = Word.objects.get_or_create(
+        word, _ = Word.objects.get_or_create(
             name=name,
             category=category,
         )
