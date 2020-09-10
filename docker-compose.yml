@@ -14,7 +14,7 @@ services:
     build:
       dockerfile: crescent/Dockerfile
       context: .
-    command: python manage.py runserver 0.0.0.0:8080
+    command: daphne -b 0.0.0.0 -p 8080 project.asgi:application
     env_file:
       - ./.env
     ports:

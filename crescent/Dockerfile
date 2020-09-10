@@ -9,4 +9,5 @@ RUN bin/install-mecab-ipadic-neologd -n -y
 
 WORKDIR /opt/crescent
 COPY crescent/requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt \
+    && pip install daphne
