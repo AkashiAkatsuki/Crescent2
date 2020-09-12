@@ -12,3 +12,5 @@ shell:
 	docker-compose exec crescent python manage.py shell
 test:
 	docker-compose exec crescent python manage.py test ${app}
+pip-install:
+	docker-compose exec crescent pip install -r requirements.txt
