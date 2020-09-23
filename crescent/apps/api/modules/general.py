@@ -15,7 +15,10 @@ CATEGORIES = [
 
 
 def category2number(category):
-    return CATEGORIES.index(category)
+    if category in CATEGORIES:
+        return CATEGORIES.index(category)
+    else:
+        return len(CATEGORIES) - 1
 
 
 def tokenize(text, with_category=False):
