@@ -1,10 +1,13 @@
 import json
+import logging
 
 from apps.api.modules.markov import MarkovModel
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.views.decorators.http import require_POST
+
+logger = logging.getLogger("crescent")
 
 
 class JsonResponseUTF8(JsonResponse):
@@ -22,6 +25,7 @@ def index(request):
 @csrf_exempt
 def learn(request):
     data = json.loads(request.body)
+    logger.debug("learning: " + data["input_text"])
     markov = MarkovModel()
     descriptions = markov.learn(data["input_text"])
     return JsonResponseUTF8(
