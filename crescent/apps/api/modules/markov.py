@@ -34,26 +34,19 @@ class MarkovModel(ConversationModelBase):
         }
 
     def generate(self, input_text=None, options=None):
+        keyword_id = None
         if input_text:
             descriptions = self.learn(input_text)
-            keyword_id = random.choice(descriptions["input_words"])["id"]
-        elif options and "keyword_id" in options:
-            descriptions = []
-            keyword_id = options["keyword_id"]
+            keyword_id = self.choice_keyword_id(descriptions["input_words"])
         else:
-            return None, {}
-        suggested = Markov.objects.filter(prefix1=keyword_id)
-        choiced = random.choice(suggested)
-        sequence = [keyword_id, choiced.prefix2, choiced.suffix]
-        for _ in range(self.max_generate_length):
-            suggested = Markov.objects.filter(
-                prefix1=sequence[-2],
-                prefix2=sequence[-1],
+            descriptions = {}
+        if not keyword_id:
+            keyword_id = (
+                options["keyword_id"]
+                if options and "keyword_id" in options
+                else self._get_random_keyword_id()
             )
-            choiced = random.choice(suggested)
-            if choiced.suffix == -1:
-                break
-            sequence += [choiced.suffix]
+        sequence = self._chain(keyword_id)
         found = Word.objects.filter(id__in=sequence)
         found = {w.id: w for w in found}
         ordered = [found[i] for i in sequence]
@@ -67,3 +60,32 @@ class MarkovModel(ConversationModelBase):
             category=category,
         )
         return word
+
+    def choice_keyword_id(self, input_words):
+        suggested = [word for word in input_words if word["category"] == 0]
+        return random.choice(suggested)["id"] if len(suggested) > 0 else None
+
+    def _chain(self, keyword_id):
+        suggested = Markov.objects.filter(prefix1=keyword_id)
+        if len(suggested) == 0:
+            return [keyword_id]
+        choiced = random.choice(suggested)
+        if choiced.prefix2 == -1:
+            return [keyword_id]
+        if choiced.suffix == -1:
+            return [keyword_id, choiced.prefix2]
+        sequence = [keyword_id, choiced.prefix2, choiced.suffix]
+        for _ in range(self.max_generate_length):
+            suggested = Markov.objects.filter(
+                prefix1=sequence[-2],
+                prefix2=sequence[-1],
+            )
+            choiced = random.choice(suggested)
+            if choiced.suffix == -1:
+                break
+            sequence += [choiced.suffix]
+        return sequence
+
+    def _get_random_keyword_id(self):
+        suggested = Word.objects.filter(category=0)
+        return random.choice(suggested).id
