@@ -14,3 +14,5 @@ test:
 	docker-compose exec crescent python manage.py test ${app}
 pip-install:
 	docker-compose exec crescent pip install -r requirements.txt
+twitter:
+	docker-compose exec crescent python manage.py twitter_stream

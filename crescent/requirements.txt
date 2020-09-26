@@ -1,3 +1,6 @@
 Django
 psycopg2
 MeCab
+requests
+requests_oauthlib
+tweepy
