@@ -7,5 +7,3 @@ RUN apt-get update && \
 
 ENV LANG ja_JP.UTF-8
 ENV LC_TIME C
-
-ADD ./createdb.sql /docker-entrypoint-initdb.d/
