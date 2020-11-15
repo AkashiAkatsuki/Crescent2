@@ -23,3 +23,10 @@ class Markov(models.Model):
     class Meta:
         db_table = "markovs"
         unique_together = ("prefix1", "prefix2", "suffix")
+
+
+class UnknownWord(models.Model):
+    word_id = models.ForeignKey(Word, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "unknown_words"

@@ -7,35 +7,50 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Word',
+            name="Word",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.TextField()),
-                ('category', models.IntegerField()),
-                ('value', models.FloatField(default=0.5)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.TextField()),
+                ("category", models.IntegerField()),
+                ("value", models.FloatField(default=0.5)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                'db_table': 'words',
+                "db_table": "words",
             },
         ),
         migrations.CreateModel(
-            name='Markov',
+            name="Markov",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('prefix1', models.IntegerField()),
-                ('prefix2', models.IntegerField()),
-                ('suffix', models.IntegerField()),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("prefix1", models.IntegerField()),
+                ("prefix2", models.IntegerField()),
+                ("suffix", models.IntegerField()),
             ],
             options={
-                'db_table': 'markovs',
-                'unique_together': {('prefix1', 'prefix2', 'suffix')},
+                "db_table": "markovs",
+                "unique_together": {("prefix1", "prefix2", "suffix")},
             },
         ),
     ]
