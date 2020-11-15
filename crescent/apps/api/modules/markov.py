@@ -1,6 +1,6 @@
 import random
 from django.forms.models import model_to_dict
-from apps.api.models import Word, Markov
+from apps.api.models import Word, Markov, UnknownWord
 from apps.api.modules.general import tokenize
 
 
@@ -55,10 +55,12 @@ class MarkovModel(ConversationModelBase):
         return output_text, descriptions
 
     def _token2word(self, name, category):
-        word, _ = Word.objects.get_or_create(
+        word, created = Word.objects.get_or_create(
             name=name,
             category=category,
         )
+        if created:
+            UnknownWord.objects.create(word_id=word.id)
         return word
 
     def choice_keyword_id(self, input_words):
