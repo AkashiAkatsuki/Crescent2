@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "word_id",
+                    "word",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE, to="api.word"
                     ),

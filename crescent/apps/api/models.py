@@ -26,7 +26,7 @@ class Markov(models.Model):
 
 
 class UnknownWord(models.Model):
-    word_id = models.ForeignKey(Word, on_delete=models.CASCADE)
+    word = models.ForeignKey(Word, on_delete=models.CASCADE)
 
     class Meta:
         db_table = "unknown_words"
