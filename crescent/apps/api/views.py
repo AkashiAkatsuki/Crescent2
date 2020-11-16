@@ -1,6 +1,7 @@
 import json
 import logging
 
+from apps.api.models import UnknownWord
 from apps.api.modules.markov import MarkovModel
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import JsonResponse
@@ -51,3 +52,19 @@ def generate(request):
             "descriptions": descriptions,
         }
     )
+
+
+@require_POST
+@csrf_exempt
+def pop_unknown_words(request):
+    data = json.loads(request.body)
+    unknown_words = UnknownWord.objects.all()
+    if "count" in data:
+        unknown_words = unknown_words[: data["count"]]
+    result = {
+        "unknown_words": [
+            {"id": unk.word.id, "name": unk.word.name} for unk in unknown_words
+        ]
+    }
+    unknown_words.delete()
+    return JsonResponseUTF8(result)
