@@ -51,7 +51,7 @@ class MarkovTest(TestCase):
     def test_token2word_unknown(self):
         word = self.markov_model._token2word(self.unknown_name, 0)
         self.assertEqual(word, Word.objects.last())
-        self.assertEqual(1, UnknownWord.objects.count(word_id=word.id))
+        self.assertEqual(1, UnknownWord.objects.filter(word_id=word.id).count())
 
     def test_learn(self):
         descriptions = self.markov_model.learn("これは学習のテストです")
