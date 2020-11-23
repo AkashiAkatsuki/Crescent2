@@ -59,12 +59,12 @@ def generate(request):
 def pop_unknown_words(request):
     data = json.loads(request.body)
     unknown_words = UnknownWord.objects.all()
-    if "count" in data:
-        unknown_words = unknown_words[: data["count"]]
+    if "limit" in data:
+        unknown_words = unknown_words[: data["limit"]]
     result = {
         "unknown_words": [
             {"id": unk.word.id, "name": unk.word.name} for unk in unknown_words
         ]
     }
-    unknown_words.delete()
+    UnknownWord.objects.filter(word_id__in=[unk.id for unk in unknown_words]).delete()
     return JsonResponseUTF8(result)
