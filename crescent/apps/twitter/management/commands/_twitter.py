@@ -40,6 +40,11 @@ class TimelineStreamer:
         self._stream.filter(follow=self._friend_ids)
 
     @request_api
+    def search(self, text):
+        result = self._api.search(text, lang="ja", count=self.SEARCH_LIMIT)
+        return [status.text for status in result]
+
+    @request_api
     def _get_screen_name(self):
         return self._api.me().screen_name
 
