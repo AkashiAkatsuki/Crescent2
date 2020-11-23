@@ -17,6 +17,8 @@ def request_api(func, api_retry=0):
 
 
 class TimelineStreamer:
+    SEARCH_LIMIT = 10
+
     def __init__(self, oauth_dict, on_tweet=None, on_reply=None):
         auth = OAuthHandler(
             oauth_dict["api_key"],
@@ -65,7 +67,7 @@ class TimelineStreamer:
             status, "retweeted_status"
         ):
             return
-        text = self._clean_text(status.text)
+        text = self.clean_text(status.text)
         screen_name = status.user.screen_name
         if self.on_reply and re.search("@" + self._screen_name, status.text):
             output_text = "@" + status.author.screen_name + " "
@@ -77,7 +79,7 @@ class TimelineStreamer:
         if output_text:
             self._tweet(output_text, target_status_id)
 
-    def _clean_text(self, text):
+    def clean_text(self, text):
         text = re.sub(r"(\s|^)@[0-9a-zA-Z_]*", "", text)
         text = re.sub(r"https?://[\w/:%#\$&\?\(\)~\.=\+\-]+", "", text)
         text = re.sub(r"#[0-9a-zA-Z_-]+", "", text)
