@@ -24,9 +24,8 @@ class Command(BaseCommand):
         data = json.loads(response.text)
         texts = [streamer.search(word["name"]) for word in data["unknown_words"]]
         texts = sum(texts, [])
-        for text in texts:
-            text = streamer.clean_text(text)
-            requests.post(
-                "http://localhost:8080/api/learn",
-                json.dumps({"input_text": text}),
-            )
+        texts = [streamer.clean_text(text) for text in texts]
+        requests.post(
+            "http://localhost:8080/api/learn",
+            json.dumps({"input_texts": texts}),
+        )

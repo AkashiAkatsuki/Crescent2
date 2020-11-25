@@ -25,16 +25,20 @@ def index(request):
 @require_POST
 @csrf_exempt
 def learn(request):
-    data = json.loads(request.body)
-    logger.debug("learning: " + data["input_text"])
     markov = MarkovModel()
-    descriptions = markov.learn(data["input_text"])
-    return JsonResponseUTF8(
-        {
-            "input_text": data["input_text"],
-            "descriptions": descriptions,
-        }
-    )
+    data = json.loads(request.body)
+    input_texts = []
+    if "input_text" in data:
+        input_texts += [data["input_text"]]
+    if "input_texts" in data:
+        input_texts += data["input_texts"]
+    learned_data = [
+        {"input_text": text, "descriptions": markov.learn(text)} for text in input_texts
+    ]
+    if "input_texts" in data:
+        return JsonResponseUTF8({"learned_data": learned_data})
+    else:
+        return JsonResponseUTF8(learned_data[0])
 
 
 @require_POST
