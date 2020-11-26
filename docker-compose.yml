@@ -16,6 +16,7 @@ services:
       context: .
     command: bash -c "
       busybox crond -f -L /dev/stderr &
+      python manage.py twitter_stream &
       daphne -b 0.0.0.0 -p 8080 project.asgi:application"
     env_file:
       - ./.env
