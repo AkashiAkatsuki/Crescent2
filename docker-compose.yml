@@ -14,7 +14,10 @@ services:
     build:
       dockerfile: crescent/Dockerfile
       context: .
-    command: daphne -b 0.0.0.0 -p 8080 project.asgi:application
+    command: bash -c "
+      busybox crond -f -L /dev/stderr &
+      python manage.py twitter_stream &
+      daphne -b 0.0.0.0 -p 8080 project.asgi:application"
     env_file:
       - ./.env
     ports:
