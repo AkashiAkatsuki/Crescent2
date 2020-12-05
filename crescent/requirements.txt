@@ -4,3 +4,4 @@ MeCab
 requests
 requests_oauthlib
 tweepy
+fastapi
