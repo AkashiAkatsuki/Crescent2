@@ -40,7 +40,7 @@ class TwitterCrescent:
 
     def on_tweet(self, text, screen_name):
         response = requests.post(
-            "http://localhost:8080/api/learn",
+            "http://localhost:8080/api/listen",
             json.dumps({"input_text": text}),
             headers={"Content-Type": "application/json"},
         )
