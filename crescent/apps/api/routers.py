@@ -1,4 +1,4 @@
-from apps.api.models import UnknownWord
+from apps.api.modules.general import pop_unknown_words as _pop_unknown_words
 from apps.api.modules.markov import MarkovModel
 from apps.api.schemas import Context, Contexts, PopUnknownWordsOption
 from django.http import JsonResponse
@@ -52,13 +52,5 @@ def generate(context: Context):
 
 @router.post("/unknown-words/pop")
 def pop_unknown_words(option: PopUnknownWordsOption):
-    unknown_words = UnknownWord.objects.all()
-    if option.limit:
-        unknown_words = unknown_words[: option.limit]
-    result = {
-        "unknown_words": [
-            {"id": unk.word.id, "name": unk.word.name} for unk in unknown_words
-        ]
-    }
-    UnknownWord.objects.filter(word_id__in=[unk.id for unk in unknown_words]).delete()
-    return result
+    unknown_words = _pop_unknown_words(limit=option.limit)
+    return {"unknown_words": unknown_words}
