@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.9.1
 RUN apt-get update && apt-get install -y sudo git mecab libmecab-dev mecab-ipadic-utf8 busybox-static\
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
@@ -11,5 +11,3 @@ WORKDIR /opt/crescent
 COPY crescent/requirements.txt requirements.txt
 RUN pip install -r requirements.txt \
     && pip install daphne
-
-COPY crescent/crontab /var/spool/cron/crontabs/root

@@ -1,3 +1,4 @@
+import os
 import re
 import time
 from tweepy import API, OAuthHandler, Stream, StreamListener, TweepError, RateLimitError
@@ -8,7 +9,8 @@ def request_api(func, api_retry=0):
         for _ in range(api_retry + 1):
             try:
                 return func(*args, **kargs)
-            except TweepError:
+            except TweepError as e:
+                print(e)
                 pass
             except RateLimitError:
                 time.sleep(15 * 60)
@@ -19,14 +21,14 @@ def request_api(func, api_retry=0):
 class TimelineStreamer:
     SEARCH_LIMIT = 10
 
-    def __init__(self, oauth_dict, on_tweet=None, on_reply=None):
+    def __init__(self, on_tweet=None, on_reply=None):
         auth = OAuthHandler(
-            oauth_dict["api_key"],
-            oauth_dict["api_secret"],
+            os.getenv("API_KEY"),
+            os.getenv("API_SECRET"),
         )
         auth.set_access_token(
-            oauth_dict["access_token"],
-            oauth_dict["access_secret"],
+            os.getenv("ACCESS_TOKEN"),
+            os.getenv("ACCESS_SECRET"),
         )
         self.on_tweet = on_tweet
         self.on_reply = on_reply

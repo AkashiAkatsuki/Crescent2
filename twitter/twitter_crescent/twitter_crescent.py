@@ -1,28 +1,6 @@
 import json
-import os
 import random
 import requests
-from django.core.management.base import BaseCommand
-from ._twitter import TimelineStreamer
-
-
-class Command(BaseCommand):
-    help = "Start listening timeline stream"
-
-    def handle(self, *args, **options):
-        self.crescent = TwitterCrescent()
-        oauth_dict = {
-            "api_key": os.environ["API_KEY"],
-            "api_secret": os.environ["API_SECRET"],
-            "access_token": os.environ["ACCESS_TOKEN"],
-            "access_secret": os.environ["ACCESS_SECRET"],
-        }
-        streamer = TimelineStreamer(
-            oauth_dict,
-            on_tweet=self.crescent.on_tweet,
-            on_reply=self.crescent.on_reply,
-        )
-        streamer.stream()
 
 
 class TwitterCrescent:
@@ -40,7 +18,7 @@ class TwitterCrescent:
 
     def on_tweet(self, text, screen_name):
         response = requests.post(
-            "http://localhost:8080/api/listen",
+            "http://crescent:8080/api/listen",
             json.dumps({"input_text": text}),
             headers={"Content-Type": "application/json"},
         )
@@ -63,7 +41,7 @@ class TwitterCrescent:
         if keyword_id:
             data["options"]["keyword_id"] = keyword_id
         response = requests.post(
-            "http://localhost:8080/api/generate",
+            "http://crescent:8080/api/generate",
             json.dumps(data),
             headers={"Content-Type": "application/json"},
         )

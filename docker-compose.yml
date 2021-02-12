@@ -1,7 +1,9 @@
 version: '3.3'
 services:
   postgres:
-    image: postgres:11-alpine
+    build:
+      context: .
+      dockerfile: db/Dockerfile
     hostname: postgres
     ports:
       - "5433:5432"
@@ -12,11 +14,10 @@ services:
       - ./db/initdb:/docker-entrypoint-initdb.d
   crescent:
     build:
-      dockerfile: crescent/Dockerfile
       context: .
+      dockerfile: crescent/Dockerfile
+    hostname: crescent
     command: bash -c "
-      busybox crond -f -L /dev/stderr &
-      python manage.py twitter_stream &
       daphne -b 0.0.0.0 -p 8080 project.asgi:fastapp &
       daphne -b 0.0.0.0 -p 8081 project.asgi:application"
     env_file:
@@ -28,5 +29,18 @@ services:
       - postgres
     volumes:
       - ./crescent:/opt/crescent
+  twitter:
+    build:
+      context: .
+      dockerfile: twitter/Dockerfile
+    command: bash -c "
+      busybox crond -f -L /dev/stderr &
+      python main.py start"
+    env_file:
+      - ./.env
+    depends_on:
+      - crescent
+    volumes:
+      - ./twitter:/opt/twitter
 volumes:
   dbdata:
