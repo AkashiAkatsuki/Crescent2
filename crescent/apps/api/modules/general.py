@@ -1,4 +1,5 @@
 import MeCab
+from apps.api.models import UnknownWord
 
 CATEGORIES = [
     "名詞",
@@ -33,3 +34,10 @@ def tokenize(text, with_category=False):
     if with_category:
         return [parse_mecab_result(m) for m in mecab_results]
     return [parse_mecab_result(m)[0] for m in mecab_results]
+
+
+def pop_unknown_words(limit=1000):
+    unknown_words = UnknownWord.objects.all()[:limit]
+    result = [{"id": unk.word.id, "name": unk.word.name} for unk in unknown_words]
+    UnknownWord.objects.filter(word_id__in=[unk.id for unk in unknown_words]).delete()
+    return result
