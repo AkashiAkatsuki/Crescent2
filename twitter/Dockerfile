@@ -9,3 +9,7 @@ COPY twitter/requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 COPY twitter/crontab /var/spool/cron/crontabs/root
+
+CMD bash -c "\
+  busybox crond -f -L /dev/stderr &\
+  python main.py start"
