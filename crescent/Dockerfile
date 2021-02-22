@@ -12,6 +12,8 @@ COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt \
     && pip install daphne
 
+COPY . .
+
 CMD bash -c "\
     daphne -b 0.0.0.0 -p 8080 project.asgi:fastapp &\
     daphne -b 0.0.0.0 -p 8081 project.asgi:application"

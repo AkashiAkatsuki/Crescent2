@@ -10,6 +10,8 @@ RUN pip install -r requirements.txt
 
 COPY crontab /var/spool/cron/crontabs/root
 
+COPY . .
+
 CMD bash -c "\
   busybox crond -f -L /dev/stderr &\
   python main.py start"
