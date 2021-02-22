@@ -1,9 +1,7 @@
 version: '3.3'
 services:
   postgres:
-    build:
-      context: .
-      dockerfile: db/Dockerfile
+    image: postgres:12
     hostname: postgres
     ports:
       - "5433:5432"
@@ -14,8 +12,7 @@ services:
       - ./db/initdb:/docker-entrypoint-initdb.d
   crescent:
     build:
-      context: .
-      dockerfile: crescent/Dockerfile
+      context: crescent
     hostname: crescent
     command: bash -c "
       daphne -b 0.0.0.0 -p 8080 project.asgi:fastapp &
@@ -31,8 +28,7 @@ services:
       - ./crescent:/opt/crescent
   twitter:
     build:
-      context: .
-      dockerfile: twitter/Dockerfile
+      context: twitter
     command: bash -c "
       busybox crond -f -L /dev/stderr &
       python main.py start"
