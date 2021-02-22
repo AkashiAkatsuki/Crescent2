@@ -13,6 +13,8 @@ RUN pip install -r requirements.txt \
     && pip install daphne
 
 COPY . .
+RUN touch logs/django.log
+
 
 CMD bash -c "\
     python manage.py migrate &\
