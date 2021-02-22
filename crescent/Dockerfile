@@ -15,5 +15,6 @@ RUN pip install -r requirements.txt \
 COPY . .
 
 CMD bash -c "\
+    python manage.py migrate &\
     daphne -b 0.0.0.0 -p 8080 project.asgi:fastapp &\
     daphne -b 0.0.0.0 -p 8081 project.asgi:application"
