@@ -1,4 +1,5 @@
 import json
+import os
 import random
 import requests
 
@@ -15,10 +16,11 @@ class TwitterCrescent:
         self._hotword_ids = []
         self._members = []
         self._interval_count = 0
+        self.api_host = os.getenv("API_HOST")
 
     def on_tweet(self, text, screen_name):
         response = requests.post(
-            "http://crescent:8080/api/listen",
+            self.api_host + "/api/listen",
             json.dumps({"input_text": text}),
             headers={"Content-Type": "application/json"},
         )
@@ -41,7 +43,7 @@ class TwitterCrescent:
         if keyword_id:
             data["options"]["keyword_id"] = keyword_id
         response = requests.post(
-            "http://crescent:8080/api/generate",
+            self.api_host + "/api/generate",
             json.dumps(data),
             headers={"Content-Type": "application/json"},
         )

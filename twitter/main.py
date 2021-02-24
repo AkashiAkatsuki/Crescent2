@@ -1,5 +1,6 @@
 import fire
 import json
+import os
 import requests
 from twitter_crescent.timeline_streamer import TimelineStreamer
 from twitter_crescent.twitter_crescent import TwitterCrescent
@@ -15,9 +16,10 @@ def start():
 
 
 def search():
+    api_host = os.getenv("API_HOST")
     streamer = TimelineStreamer()
     response = requests.post(
-        "http://crescent:8080/api/unknown-words/pop",
+        api_host + "/api/unknown-words/pop",
         json.dumps({"limit": 10}),
     )
     data = json.loads(response.text)
@@ -25,7 +27,7 @@ def search():
     texts = sum(texts, [])
     texts = [{"input_text": streamer.clean_text(text)} for text in texts]
     requests.post(
-        "http://crescent:8080/api/learn",
+        api_host + "/api/learn",
         json.dumps({"contexts": texts}),
     )
 
