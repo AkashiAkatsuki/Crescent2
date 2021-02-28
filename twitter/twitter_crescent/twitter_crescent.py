@@ -30,7 +30,7 @@ class TwitterCrescent:
         self._interval_count += 1
         if self._interval_count > self._get_interval():
             self._interval_count = 0
-        return self._generate()
+            return self._generate()
 
     def on_reply(self, text):
         return self._generate(text)
