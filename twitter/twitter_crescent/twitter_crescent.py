@@ -50,9 +50,12 @@ class TwitterCrescent:
         return json.loads(response.text.encode("utf-8"))["output_text"]
 
     def _store_hotwords(self, words):
-        word_ids = [word["id"] for word in words if word["category"] == 0]
+        word_ids = [word["id"] for word in words if self._is_hotword(word)]
         self._hotword_ids += word_ids
         self._hotword_ids = self._hotword_ids[-self.max_count_hotwords :]
+
+    def _is_hotword(self, word):
+        return word["category"] == 0 and len(word["name"]) > 1
 
     def _get_random_hotword_id(self):
         return random.choice(self._hotword_ids) if len(self._hotword_ids) > 0 else None
